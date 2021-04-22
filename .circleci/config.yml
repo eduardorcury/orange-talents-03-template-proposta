@@ -18,7 +18,6 @@ jobs:
             - run:
                 name: Wait for Database Connection
                 command: dockerize -wait tcp://localhost:3306 -timeout 1m
-            - run: sudo apt-get install mysql-client
 
             - restore_cache:
                   keys:
