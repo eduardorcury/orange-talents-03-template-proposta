@@ -37,4 +37,19 @@ public class Proposta {
     public Long getId() {
         return id;
     }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public BigDecimal getSalario() {
+        return salario;
+    }
+
+    public String retornaDocumentoOfuscado() {
+        StringBuilder builder = new StringBuilder(this.documento);
+        builder.replace(3, this.documento.length() - 3, "*".repeat(this.documento.length() - 6));
+        return builder.toString();
+    }
+
 }

@@ -1,5 +1,7 @@
 package com.zup.academy.edurardoribeiro.Proposta.criacao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +19,7 @@ import java.net.URI;
 public class CriacaoPropostaController {
 
     private final EntityManager entityManager;
+    private final Logger logger = LoggerFactory.getLogger(CriacaoPropostaController.class);
 
     public CriacaoPropostaController(EntityManager entityManager) {
         this.entityManager = entityManager;
@@ -33,6 +36,9 @@ public class CriacaoPropostaController {
                 .path("/propostas/{id}")
                 .buildAndExpand(proposta.getId())
                 .toUri();
+
+        logger.info("Proposta de documento {}, nome {} e salário {} criada. URI é {}",
+                proposta.retornaDocumentoOfuscado(), proposta.getNome(), proposta.getSalario(), uri.toString());
 
         return ResponseEntity.created(uri).build();
 
