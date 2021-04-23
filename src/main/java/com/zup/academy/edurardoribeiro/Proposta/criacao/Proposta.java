@@ -29,6 +29,11 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatusProposta status;
 
+    @Deprecated
+    public Proposta() {
+
+    }
+
     public Proposta(String documento, String email, String nome, String endereco, BigDecimal salario) {
         this.documento = documento;
         this.email = email;
@@ -51,6 +56,10 @@ public class Proposta {
 
     public String getDocumento() {
         return documento;
+    }
+
+    public StatusProposta getStatus() {
+        return status;
     }
 
     public void setStatus(StatusProposta status) {

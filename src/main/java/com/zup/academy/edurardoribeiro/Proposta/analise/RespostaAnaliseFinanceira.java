@@ -37,6 +37,22 @@ public class RespostaAnaliseFinanceira {
 
     }
 
+    public String getDocumento() {
+        return documento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public ResultadoAnalise getResultadoSolicitacao() {
+        return resultadoSolicitacao;
+    }
+
+    public Long getIdProposta() {
+        return idProposta;
+    }
+
     public StatusProposta retornaStatusProposta() {
         return this.resultadoSolicitacao.retornaStatus();
     }

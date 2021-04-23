@@ -58,6 +58,11 @@ public class CriadorRequests {
             return this;
         }
 
+        public NovaPropostaBuilder comRestricao() {
+            this.documento = "383.708.230-09";
+            return this;
+        }
+
         public NovaPropostaRequest build() {
             return new NovaPropostaRequest(this.documento, this.email,
                     this.nome, this.endereco, this.salario);
