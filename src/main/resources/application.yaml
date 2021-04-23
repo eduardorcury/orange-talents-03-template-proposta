@@ -9,7 +9,7 @@ spring:
       ddl-auto: create
 
 analise-financeira:
-  url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999/api/solicitacao}
+  url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999}
 
 feign:
   client:
@@ -34,4 +34,4 @@ management:
         include: "health"
   endpoint:
     health:
-      show-details: when-authorized
+      show-details: always
