@@ -14,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@ActiveProfiles("testeintegracao")
 class AnaliseFinanceiraServiceTest {
 
     @Autowired

@@ -33,7 +33,6 @@ class CriacaoPropostaControllerTest {
 
     @Test
     @DisplayName("Criação de proposta válida")
-    @Transactional
     void criacaoDePropostaValida() throws Exception {
 
         NovaPropostaRequest requestValido = builder().build();
