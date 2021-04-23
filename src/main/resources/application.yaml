@@ -18,3 +18,20 @@ feign:
         connectTimeout: 2000
         readTimeout: 2000
         loggerLevel: basic
+
+management:
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "health"
+    jmx:
+      exposure:
+        include: "health"
+  endpoint:
+    health:
+      show-details: when-authorized
