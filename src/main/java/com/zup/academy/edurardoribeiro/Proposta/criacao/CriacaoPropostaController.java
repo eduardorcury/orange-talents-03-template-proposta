@@ -1,6 +1,8 @@
 package com.zup.academy.edurardoribeiro.Proposta.criacao;
 
+import com.zup.academy.edurardoribeiro.Proposta.analise.AnaliseFinanceiraService;
 import com.zup.academy.edurardoribeiro.Proposta.compartilhado.erros.ErroPadronizado;
+import com.zup.academy.edurardoribeiro.Proposta.analise.PedidoAnaliseFinanceira;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Set;
 
@@ -21,16 +22,19 @@ import java.util.Set;
 public class CriacaoPropostaController {
 
     private final PropostaRepository propostaRepository;
-    private final Logger logger = LoggerFactory.getLogger(CriacaoPropostaController.class);
+    private final AnaliseFinanceiraService analiseService;
+    private final Logger logger = LoggerFactory.getLogger("jsonLogger");
 
-    public CriacaoPropostaController(PropostaRepository propostaRepository) {
+    public CriacaoPropostaController(PropostaRepository propostaRepository,
+                                     AnaliseFinanceiraService analiseService) {
         this.propostaRepository = propostaRepository;
+        this.analiseService = analiseService;
     }
 
+
     @PostMapping
-    @Transactional
     public ResponseEntity<?> cria(@RequestBody @Valid NovaPropostaRequest request,
-                               UriComponentsBuilder uriComponentsBuilder) {
+                               UriComponentsBuilder uriComponentsBuilder) throws IOException {
 
         if (propostaRepository.existsByDocumento(request.getDocumento())) {
             return ResponseEntity.status(422).body(new ErroPadronizado(Set.of("Erro de criação de proposta")));
@@ -46,6 +50,8 @@ public class CriacaoPropostaController {
 
         logger.info("Proposta de documento {}, nome {} e salário {} criada. URI é {}",
                 proposta.retornaDocumentoOfuscado(), proposta.getNome(), proposta.getSalario(), uri.toString());
+
+        analiseService.analise(proposta);
 
         return ResponseEntity.created(uri).build();
 

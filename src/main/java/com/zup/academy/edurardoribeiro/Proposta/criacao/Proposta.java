@@ -26,6 +26,9 @@ public class Proposta {
     @Column(nullable = false)
     private BigDecimal salario;
 
+    @Enumerated(EnumType.STRING)
+    private StatusProposta status;
+
     public Proposta(String documento, String email, String nome, String endereco, BigDecimal salario) {
         this.documento = documento;
         this.email = email;
@@ -44,6 +47,14 @@ public class Proposta {
 
     public BigDecimal getSalario() {
         return salario;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public void setStatus(StatusProposta status) {
+        this.status = status;
     }
 
     public String retornaDocumentoOfuscado() {

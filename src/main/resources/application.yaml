@@ -6,4 +6,15 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
+
+analise-financeira:
+  url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999/api/solicitacao}
+
+feign:
+  client:
+    config:
+      AnaliseFinanceiraClient:
+        connectTimeout: 2000
+        readTimeout: 2000
+        loggerLevel: basic
