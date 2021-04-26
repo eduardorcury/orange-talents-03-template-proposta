@@ -2,16 +2,21 @@ package com.zup.academy.edurardoribeiro.Proposta.cartao;
 
 import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.PropostaRepository;
+import com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.*;
 
 @Component
 @EnableScheduling
@@ -21,12 +26,13 @@ public class AssociadorDeCartoes {
     private final CartaoClient cartaoClient;
     private final Logger logger = LoggerFactory.getLogger("jsonLogger");
 
-    public static List<Proposta> propostasElegiveis = new ArrayList<>();
+    public static List<Proposta> propostasElegiveis;
 
     public AssociadorDeCartoes(PropostaRepository propostaRepository,
                                CartaoClient cartaoClient) {
         this.propostaRepository = propostaRepository;
         this.cartaoClient = cartaoClient;
+        propostasElegiveis = propostaRepository.findByStatus(ELEGIVEL);
     }
 
     @Scheduled(fixedRate = 5000, initialDelay = 10000)

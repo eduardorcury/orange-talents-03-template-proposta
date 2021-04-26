@@ -16,6 +16,6 @@ public interface PropostaRepository extends CrudRepository<Proposta, Long> {
     @QueryHints(value = {
             @QueryHint(name = "javax.persistence.query.timeout", value = "300")
     })
-    List<Proposta> findByStatus(String status);
+    List<Proposta> findByStatus(StatusProposta status);
 
 }
