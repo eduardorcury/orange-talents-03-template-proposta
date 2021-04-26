@@ -1,6 +1,7 @@
 package com.zup.academy.edurardoribeiro.Proposta.analise;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zup.academy.edurardoribeiro.Proposta.cartao.AssociadorDeCartoes;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.PropostaRepository;
 import feign.FeignException;
@@ -33,10 +34,12 @@ public class AnaliseFinanceiraService {
         RespostaAnaliseFinanceira resposta = null;
         try {
             resposta = analiseClient.consulta(pedido);
+            proposta.setStatus(resposta.retornaStatusProposta());
+            AssociadorDeCartoes.propostasElegiveis.add(proposta);
         } catch (FeignException.UnprocessableEntity exception) {
             resposta = mapper.readValue(exception.responseBody().get().array(), RespostaAnaliseFinanceira.class);
-        } finally {
             proposta.setStatus(resposta.retornaStatusProposta());
+        } finally {
             propostaRepository.save(proposta);
         }
 

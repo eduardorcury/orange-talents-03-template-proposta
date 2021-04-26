@@ -1,6 +1,7 @@
 package com.zup.academy.edurardoribeiro.Proposta.criacao;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 
 @Entity
@@ -28,6 +29,8 @@ public class Proposta {
 
     @Enumerated(EnumType.STRING)
     private StatusProposta status;
+
+    private String cartaoId;
 
     @Deprecated
     public Proposta() {
@@ -62,14 +65,23 @@ public class Proposta {
         return status;
     }
 
+    public String getCartaoId() {
+        return cartaoId;
+    }
+
     public void setStatus(StatusProposta status) {
         this.status = status;
     }
 
     public String retornaDocumentoOfuscado() {
         StringBuilder builder = new StringBuilder(this.documento);
-        builder.replace(3, this.documento.length() - 3, "*".repeat(this.documento.length() - 6));
+        builder.replace(4, this.documento.length(), "***.***-**");
         return builder.toString();
+    }
+
+    public void associaCartao(@NotBlank String cartaoId) {
+        this.cartaoId = cartaoId;
+        this.status = StatusProposta.CARTAO_ATRELADO;
     }
 
 }

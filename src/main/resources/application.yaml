@@ -8,13 +8,20 @@ spring:
     hibernate:
       ddl-auto: create
 
-analise-financeira:
-  url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999}
+sistemas:
+  analise-financeira:
+    url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999}
+  cartoes:
+    url: ${CARTOES_URL:http://localhost:8888}
 
 feign:
   client:
     config:
       AnaliseFinanceiraClient:
+        connectTimeout: 2000
+        readTimeout: 2000
+        loggerLevel: basic
+      CartaoClient:
         connectTimeout: 2000
         readTimeout: 2000
         loggerLevel: basic

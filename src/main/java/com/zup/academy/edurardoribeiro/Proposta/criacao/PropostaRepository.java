@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.persistence.QueryHint;
+import java.util.List;
 
 public interface PropostaRepository extends CrudRepository<Proposta, Long> {
 
@@ -11,5 +12,10 @@ public interface PropostaRepository extends CrudRepository<Proposta, Long> {
             @QueryHint(name = "javax.persistence.query.timeout", value = "100")
     })
     Boolean existsByDocumento(String documento);
+
+    @QueryHints(value = {
+            @QueryHint(name = "javax.persistence.query.timeout", value = "300")
+    })
+    List<Proposta> findByStatus(String status);
 
 }
