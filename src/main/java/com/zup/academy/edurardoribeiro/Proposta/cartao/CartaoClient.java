@@ -12,4 +12,7 @@ public interface CartaoClient {
     @RequestMapping(method = GET, value = "/api/cartoes")
     ConsultaCartaoResponse consultaCartao(@RequestParam(name = "idProposta", required = true) Long idProposta);
 
+    @RequestMapping(method = GET, value = "/actuator/health")
+    void healthCheck();
+
 }
