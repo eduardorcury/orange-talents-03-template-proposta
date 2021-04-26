@@ -3,12 +3,12 @@ package com.zup.academy.edurardoribeiro.Proposta.acompanhamento;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta;
 
-public class DetalhesPropostaResponse {
+public class ConsultaPropostaResponse {
 
     private Long id;
     private StatusProposta status;
 
-    public DetalhesPropostaResponse(Proposta proposta) {
+    public ConsultaPropostaResponse(Proposta proposta) {
         this.id = proposta.getId();
         this.status = proposta.getStatus();
     }

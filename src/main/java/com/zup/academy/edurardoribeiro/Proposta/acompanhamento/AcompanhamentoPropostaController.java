@@ -19,14 +19,14 @@ public class AcompanhamentoPropostaController {
     }
 
     @GetMapping("/propostas/{id:^[0-9]*$}")
-    public ResponseEntity<DetalhesPropostaResponse> mostraDetalhes(@PathVariable("id") Long propostaId) {
+    public ResponseEntity<ConsultaPropostaResponse> mostraDetalhes(@PathVariable("id") Long propostaId) {
 
         Optional<Proposta> propostaOptional = propostaRepository.findById(propostaId);
 
         if (propostaOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            DetalhesPropostaResponse response = new DetalhesPropostaResponse(propostaOptional.get());
+            ConsultaPropostaResponse response = new ConsultaPropostaResponse(propostaOptional.get());
             return ResponseEntity.ok(response);
         }
 
