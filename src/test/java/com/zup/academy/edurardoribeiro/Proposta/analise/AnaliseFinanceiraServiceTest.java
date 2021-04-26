@@ -7,6 +7,7 @@ import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import feign.FeignException;
 import feign.Request;
 import feign.RequestTemplate;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,7 @@ import java.util.Collections;
 
 import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.ELEGIVEL;
 import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.NAO_ELEGIVEL;
+import static org.awaitility.Awaitility.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -63,7 +65,7 @@ class AnaliseFinanceiraServiceTest {
 
         when(client.consulta(pedido)).thenReturn(resposta);
         service.analise(proposta);
-
+        await().until(() -> proposta.getStatus() != null);
         assertThat(proposta.getStatus(), is(ELEGIVEL));
 
     }
@@ -87,7 +89,7 @@ class AnaliseFinanceiraServiceTest {
 
         when(client.consulta(pedido)).thenThrow(exception);
         service.analise(proposta);
-
+        await().until(() -> proposta.getStatus() != null);
         assertThat(proposta.getStatus(), is(NAO_ELEGIVEL));
 
     }

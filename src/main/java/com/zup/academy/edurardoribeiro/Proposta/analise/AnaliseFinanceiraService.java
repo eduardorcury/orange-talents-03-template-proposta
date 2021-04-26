@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.PropostaRepository;
 import feign.FeignException;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
 @Service
+@EnableAsync
 public class AnaliseFinanceiraService {
 
     private final PropostaRepository propostaRepository;
@@ -23,6 +26,7 @@ public class AnaliseFinanceiraService {
         this.mapper = mapper;
     }
 
+    @Async
     public void analise(Proposta proposta) throws IOException {
 
         PedidoAnaliseFinanceira pedido = new PedidoAnaliseFinanceira(proposta);
