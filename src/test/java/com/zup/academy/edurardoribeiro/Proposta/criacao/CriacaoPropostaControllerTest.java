@@ -1,7 +1,6 @@
 package com.zup.academy.edurardoribeiro.Proposta.criacao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zup.academy.edurardoribeiro.Proposta.analise.AnaliseFinanceiraClient;
 import com.zup.academy.edurardoribeiro.Proposta.analise.AnaliseFinanceiraService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,10 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
 import java.util.stream.Stream;
 
-import static com.zup.academy.edurardoribeiro.Proposta.builder.CriadorRequests.builder;
+import static com.zup.academy.edurardoribeiro.Proposta.builder.Builder.novaProposta;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -41,7 +39,7 @@ class CriacaoPropostaControllerTest {
     @DisplayName("Criação de proposta válida")
     void criacaoDePropostaValida() throws Exception {
 
-        NovaPropostaRequest requestValido = builder().build();
+        NovaPropostaRequest requestValido = novaProposta().build();
 
         mockMvc.perform(post("/propostas")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -71,14 +69,14 @@ class CriacaoPropostaControllerTest {
 
     private static Stream<NovaPropostaRequest> criaPropostasInvalidas() {
         return Stream.of(
-                builder().semDocumento().build(),
-                builder().documentoInvalido().build(),
-                builder().semNome().build(),
-                builder().semEmail().build(),
-                builder().emailInvalido().build(),
-                builder().semEndereco().build(),
-                builder().semSalario().build(),
-                builder().salarioNegativo().build()
+                novaProposta().semDocumento().build(),
+                novaProposta().documentoInvalido().build(),
+                novaProposta().semNome().build(),
+                novaProposta().semEmail().build(),
+                novaProposta().emailInvalido().build(),
+                novaProposta().semEndereco().build(),
+                novaProposta().semSalario().build(),
+                novaProposta().salarioNegativo().build()
         );
     }
 }

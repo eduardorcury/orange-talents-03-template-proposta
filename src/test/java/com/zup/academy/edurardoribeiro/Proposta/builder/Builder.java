@@ -1,13 +1,19 @@
 package com.zup.academy.edurardoribeiro.Proposta.builder;
 
+import com.zup.academy.edurardoribeiro.Proposta.cartao.ConsultaCartaoResponse;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.NovaPropostaRequest;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-public class CriadorRequests {
+public class Builder {
 
-    public static NovaPropostaBuilder builder() {
+    public static NovaPropostaBuilder novaProposta() {
         return new NovaPropostaBuilder();
+    }
+
+    public static ConsultaCartaoBuilder novaConsultaCartao() {
+        return new ConsultaCartaoBuilder();
     }
 
     public static class NovaPropostaBuilder {
@@ -70,4 +76,17 @@ public class CriadorRequests {
 
     }
 
+    public static class ConsultaCartaoBuilder {
+
+        private String id = "1111-2222-3333-4444";
+        private String titular = "Eduardo";
+        private LocalDateTime emitidoEm = LocalDateTime.now();
+        private String idProposta = "1";
+
+        public ConsultaCartaoResponse build() {
+            return new ConsultaCartaoResponse(this.id, this.titular,
+                    this.emitidoEm, this.idProposta);
+        }
+
+    }
 }

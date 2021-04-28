@@ -1,7 +1,9 @@
 package com.zup.academy.edurardoribeiro.Proposta.criacao;
 
+import com.zup.academy.edurardoribeiro.Proposta.cartao.Cartao;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
@@ -30,7 +32,9 @@ public class Proposta {
     @Enumerated(EnumType.STRING)
     private StatusProposta status;
 
-    private String cartaoId;
+    @OneToOne
+    @JoinColumn(name = "idCartao")
+    private Cartao cartao;
 
     @Deprecated
     public Proposta() {
@@ -65,8 +69,8 @@ public class Proposta {
         return status;
     }
 
-    public String getCartaoId() {
-        return cartaoId;
+    public Cartao getCartao() {
+        return cartao;
     }
 
     public void setStatus(StatusProposta status) {
@@ -79,8 +83,8 @@ public class Proposta {
         return builder.toString();
     }
 
-    public void associaCartao(@NotBlank String cartaoId) {
-        this.cartaoId = cartaoId;
+    public void associaCartao(@NotNull Cartao cartao) {
+        this.cartao = cartao;
         this.status = StatusProposta.CARTAO_ATRELADO;
     }
 

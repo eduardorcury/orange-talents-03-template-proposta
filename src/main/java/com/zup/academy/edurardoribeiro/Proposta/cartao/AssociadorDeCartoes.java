@@ -1,5 +1,6 @@
 package com.zup.academy.edurardoribeiro.Proposta.cartao;
 
+import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.PropostaRepository;
 import feign.FeignException;
 import org.slf4j.Logger;
@@ -16,14 +17,17 @@ import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.EL
 public class AssociadorDeCartoes {
 
     private final PropostaRepository propostaRepository;
+    private final CartaoRepository cartaoRepository;
     private final CartaoClient cartaoClient;
     private final CacheManager cacheManager;
     private final Logger logger = LoggerFactory.getLogger("jsonLogger");
 
     public AssociadorDeCartoes(PropostaRepository propostaRepository,
+                               CartaoRepository cartaoRepository,
                                CartaoClient cartaoClient,
                                CacheManager cacheManager) {
         this.propostaRepository = propostaRepository;
+        this.cartaoRepository = cartaoRepository;
         this.cartaoClient = cartaoClient;
         this.cacheManager = cacheManager;
     }
@@ -34,13 +38,22 @@ public class AssociadorDeCartoes {
             Long propostaId = proposta.getId();
             try {
                 ConsultaCartaoResponse response = cartaoClient.consultaCartao(propostaId);
-                proposta.associaCartao(response.getId());
-                propostaRepository.save(proposta);
-                cacheManager.getCache("propostasElegiveis").clear();
-                logger.info("Proposta de ID {} atrelada ao cartão de ID {}", propostaId, response.retornaCartaoOfuscado());
+                associaCartaoAProposta(proposta, response);
             } catch (FeignException exception) {
                 logger.info("Cartão para a proposta {} ainda não foi criado", propostaId);
             }
         });
+    }
+
+    public void associaCartaoAProposta(Proposta proposta, ConsultaCartaoResponse response) {
+
+        Cartao cartao = response.toModel(proposta);
+        cartaoRepository.save(cartao);
+        proposta.associaCartao(cartao);
+        propostaRepository.save(proposta);
+        cacheManager.getCache("propostasElegiveis").clear();
+        logger.info("Proposta de ID {} atrelada ao cartão de ID {}",
+                proposta.getId(), response.retornaCartaoOfuscado());
+
     }
 }

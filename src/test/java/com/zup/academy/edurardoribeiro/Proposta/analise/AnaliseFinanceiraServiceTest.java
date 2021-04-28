@@ -1,7 +1,7 @@
 package com.zup.academy.edurardoribeiro.Proposta.analise;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zup.academy.edurardoribeiro.Proposta.builder.CriadorRequests;
+import com.zup.academy.edurardoribeiro.Proposta.builder.Builder;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.NovaPropostaRequest;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import feign.FeignException;
@@ -46,7 +46,7 @@ class AnaliseFinanceiraServiceTest {
 
     @BeforeEach
     void setUp() {
-        request = CriadorRequests.builder().build();
+        request = Builder.novaProposta().build();
         proposta = request.toModel();
         ReflectionTestUtils.setField(proposta, "id", 1L);
         pedido = new PedidoAnaliseFinanceira(proposta);
