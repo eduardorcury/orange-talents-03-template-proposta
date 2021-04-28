@@ -1,44 +1,9 @@
 spring:
-  datasource:
-    url: jdbc:mysql://${DB_NAME:localhost}:3306/proposta?serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: ${DB_USER:eduardo}
-    password: ${DB_PASSWORD:password}
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      ddl-auto: create
+  profiles:
+    active: dev
 
 sistemas:
   analise-financeira:
     url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999}
   cartoes:
     url: ${CARTOES_URL:http://localhost:8888}
-
-feign:
-  client:
-    config:
-      AnaliseFinanceiraClient:
-        connectTimeout: 2000
-        readTimeout: 2000
-        loggerLevel: basic
-      CartaoClient:
-        connectTimeout: 2000
-        readTimeout: 2000
-        loggerLevel: basic
-
-management:
-  health:
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: "health"
-    jmx:
-      exposure:
-        include: "health"
-  endpoint:
-    health:
-      show-details: always

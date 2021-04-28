@@ -1,5 +1,6 @@
 package com.zup.academy.edurardoribeiro.Proposta.criacao;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.CrudRepository;
 
@@ -16,6 +17,7 @@ public interface PropostaRepository extends CrudRepository<Proposta, Long> {
     @QueryHints(value = {
             @QueryHint(name = "javax.persistence.query.timeout", value = "300")
     })
+    @Cacheable(cacheNames = "propostasElegiveis", condition = "#status.toString().equals('ELEGIVEL')")
     List<Proposta> findByStatus(StatusProposta status);
 
 }

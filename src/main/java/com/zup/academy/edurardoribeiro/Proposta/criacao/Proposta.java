@@ -1,7 +1,5 @@
 package com.zup.academy.edurardoribeiro.Proposta.criacao;
 
-import com.zup.academy.edurardoribeiro.Proposta.cartao.AssociadorDeCartoes;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
@@ -84,13 +82,6 @@ public class Proposta {
     public void associaCartao(@NotBlank String cartaoId) {
         this.cartaoId = cartaoId;
         this.status = StatusProposta.CARTAO_ATRELADO;
-    }
-
-    @PostUpdate
-    private void adicionaAPropostasElegiveis(){
-        if (this.status == StatusProposta.ELEGIVEL) {
-            AssociadorDeCartoes.propostasElegiveis.add(this);
-        }
     }
 
 }

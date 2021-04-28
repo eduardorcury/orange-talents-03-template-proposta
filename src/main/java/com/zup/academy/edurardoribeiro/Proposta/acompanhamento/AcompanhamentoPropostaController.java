@@ -23,12 +23,9 @@ public class AcompanhamentoPropostaController {
 
         Optional<Proposta> propostaOptional = propostaRepository.findById(propostaId);
 
-        if (propostaOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            ConsultaPropostaResponse response = new ConsultaPropostaResponse(propostaOptional.get());
-            return ResponseEntity.ok(response);
-        }
-
+        return propostaOptional
+                .map(ConsultaPropostaResponse::new)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

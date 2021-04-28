@@ -19,7 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@ActiveProfiles("testeintegracao")
+@ActiveProfiles("test")
 @Sql(statements = "INSERT INTO propostas (id, cartao_id, documento, email, endereco, nome, salario, status)" +
         " VALUES (1, 'cartao-id', '899.291.190-43', 'email@gmail.com', 'endereco', 'Eduardo', '5000', 'ELEGIVEL');")
 class AcompanhamentoPropostaControllerTest {

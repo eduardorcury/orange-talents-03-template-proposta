@@ -1,22 +1,15 @@
 package com.zup.academy.edurardoribeiro.Proposta.cartao;
 
-import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.PropostaRepository;
-import com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta;
 import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.DependsOn;
+import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.*;
+import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.ELEGIVEL;
 
 @Component
 @EnableScheduling
@@ -24,34 +17,30 @@ public class AssociadorDeCartoes {
 
     private final PropostaRepository propostaRepository;
     private final CartaoClient cartaoClient;
+    private final CacheManager cacheManager;
     private final Logger logger = LoggerFactory.getLogger("jsonLogger");
 
-    public static List<Proposta> propostasElegiveis;
-
     public AssociadorDeCartoes(PropostaRepository propostaRepository,
-                               CartaoClient cartaoClient) {
+                               CartaoClient cartaoClient,
+                               CacheManager cacheManager) {
         this.propostaRepository = propostaRepository;
         this.cartaoClient = cartaoClient;
-        propostasElegiveis = propostaRepository.findByStatus(ELEGIVEL);
+        this.cacheManager = cacheManager;
     }
 
-    @Scheduled(fixedRate = 5000, initialDelay = 10000)
+    @Scheduled(fixedRate = 2000, initialDelay = 5000)
     public void associaCartoes() {
-
-        Iterator<Proposta> iterator = propostasElegiveis.iterator();
-        while (iterator.hasNext()) {
-            Proposta proposta = iterator.next();
+        propostaRepository.findByStatus(ELEGIVEL).forEach(proposta -> {
             Long propostaId = proposta.getId();
             try {
                 ConsultaCartaoResponse response = cartaoClient.consultaCartao(propostaId);
                 proposta.associaCartao(response.getId());
                 propostaRepository.save(proposta);
+                cacheManager.getCache("propostasElegiveis").clear();
                 logger.info("Proposta de ID {} atrelada ao cartão de ID {}", propostaId, response.retornaCartaoOfuscado());
-                iterator.remove();
             } catch (FeignException exception) {
-                logger.info("{} proposta(s) sem cartão atrelado", propostasElegiveis.size());
+                logger.info("Cartão para a proposta {} ainda não foi criado", propostaId);
             }
-        }
-
+        });
     }
 }

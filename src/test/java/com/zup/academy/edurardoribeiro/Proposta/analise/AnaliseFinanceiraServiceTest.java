@@ -2,17 +2,14 @@ package com.zup.academy.edurardoribeiro.Proposta.analise;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zup.academy.edurardoribeiro.Proposta.builder.CriadorRequests;
-import com.zup.academy.edurardoribeiro.Proposta.cartao.AssociadorDeCartoes;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.NovaPropostaRequest;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 import feign.FeignException;
 import feign.Request;
 import feign.RequestTemplate;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -25,14 +22,13 @@ import java.util.Collections;
 
 import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.ELEGIVEL;
 import static com.zup.academy.edurardoribeiro.Proposta.criacao.StatusProposta.NAO_ELEGIVEL;
-import static org.awaitility.Awaitility.*;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ActiveProfiles("testeintegracao")
+@ActiveProfiles("test")
 class AnaliseFinanceiraServiceTest {
 
     @Autowired
@@ -69,7 +65,6 @@ class AnaliseFinanceiraServiceTest {
         service.analise(proposta);
         await().until(() -> proposta.getStatus() != null);
         assertThat(proposta.getStatus(), is(ELEGIVEL));
-        assertThat(AssociadorDeCartoes.propostasElegiveis, hasSize(1));
 
     }
 
