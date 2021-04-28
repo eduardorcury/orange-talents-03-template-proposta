@@ -1,9 +1,11 @@
 package com.zup.academy.edurardoribeiro.Proposta.cartao;
 
+import com.zup.academy.edurardoribeiro.Proposta.biometria.Biometria;
 import com.zup.academy.edurardoribeiro.Proposta.criacao.Proposta;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "cartoes")
@@ -25,6 +27,9 @@ public class Cartao {
     @OneToOne(optional = false, mappedBy = "cartao", fetch = FetchType.LAZY)
     private Proposta proposta;
 
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cartao", fetch = FetchType.LAZY)
+    private List<Biometria> biometrias;
+
     @Deprecated
     public Cartao() {
 
@@ -36,4 +41,11 @@ public class Cartao {
         this.emitidoEm = emitidoEm;
         this.proposta = proposta;
     }
+
+    public String retornaCartaoOfuscado() {
+        StringBuilder builder = new StringBuilder(this.idExterno);
+        builder.replace(7, 13, "** ***");
+        return builder.toString();
+    }
+
 }
