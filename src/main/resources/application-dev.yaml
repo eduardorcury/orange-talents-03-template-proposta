@@ -24,6 +24,12 @@ feign:
         readTimeout: 2000
         loggerLevel: basic
 
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+
 management:
   health:
     livenessstate:
