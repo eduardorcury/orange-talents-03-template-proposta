@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class AnaliseFinanceiraServiceTest {
 
     @Autowired
@@ -48,7 +50,7 @@ class AnaliseFinanceiraServiceTest {
     void setUp() {
         request = Builder.novaProposta().build();
         proposta = request.toModel();
-        ReflectionTestUtils.setField(proposta, "id", 1L);
+        ReflectionTestUtils.setField(proposta,"id", 1L);
         pedido = new PedidoAnaliseFinanceira(proposta);
     }
 

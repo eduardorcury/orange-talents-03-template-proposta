@@ -21,6 +21,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class AssociadorDeCartoesTest {
     
     @Autowired
@@ -37,7 +38,6 @@ class AssociadorDeCartoesTest {
 
     @Test
     @DisplayName("Deve associar cartão a proposta")
-    @Transactional
     void deveAssociarCartaoAProposta() {
 
         Proposta proposta = novaProposta().build().toModel();

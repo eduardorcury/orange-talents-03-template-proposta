@@ -18,6 +18,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
+@Transactional
 class CadastroBiometriaControllerTest {
 
     private final String url = "/cartoes/1111-2222-3333-4444/biometrias";
@@ -48,10 +49,10 @@ class CadastroBiometriaControllerTest {
     ObjectMapper mapper;
 
     @Test
-    @Order(1)
     void deveCadastrarBiometriaParaCartaoExistente() throws Exception {
 
         Proposta proposta = novaProposta().build().toModel();
+        ReflectionTestUtils.setField(proposta, "id", 1L);
         propostaRepository.save(proposta);
         Cartao cartao = novaConsultaCartao().build().toModel(proposta);
         cartaoRepository.save(cartao);
