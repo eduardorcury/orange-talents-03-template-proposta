@@ -14,13 +14,13 @@ import java.util.Optional;
 public class BloqueioController {
 
     private final CartaoRepository cartaoRepository;
-    private final BloqueioRepository bloqueioRepository;
+    private final BloqueadorDeCartoes bloqueador;
     private final Logger logger = LoggerFactory.getLogger("jsonLogger");
 
     public BloqueioController(CartaoRepository cartaoRepository,
-                              BloqueioRepository bloqueioRepository) {
+                              BloqueadorDeCartoes bloqueador) {
         this.cartaoRepository = cartaoRepository;
-        this.bloqueioRepository = bloqueioRepository;
+        this.bloqueador = bloqueador;
     }
 
     @PostMapping("/cartoes/{id}/bloqueio")
@@ -30,18 +30,13 @@ public class BloqueioController {
 
         Optional<Cartao> cartaoOptional = cartaoRepository.findById(cartaoId);
 
-        return cartaoOptional.map(cartao -> {
-            if (cartao.bloqueado()) {
-                return ResponseEntity.unprocessableEntity().build();
-            } else {
-                Bloqueio bloqueio = request.toModel(userAgent, cartao);
-                bloqueioRepository.save(bloqueio);
-                cartao.bloquearCartao();
-                cartaoRepository.save(cartao);
-                logger.info("Bloqueio criado para o cartão de ID {}", cartaoId);
-                return ResponseEntity.ok().build();
-            }
-        }).orElseGet(() -> ResponseEntity.notFound().build());
+        if (cartaoOptional.isPresent()) {
+            bloqueador.bloqueiaCartao(cartaoOptional.get(), userAgent, request);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
 
     }
+
 }

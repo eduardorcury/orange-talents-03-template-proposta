@@ -48,6 +48,10 @@ public class Cartao {
         return id;
     }
 
+    public String getIdExterno() {
+        return idExterno;
+    }
+
     public String retornaCartaoOfuscado() {
         StringBuilder builder = new StringBuilder(this.idExterno);
         builder.replace(7, 13, "** ***");
