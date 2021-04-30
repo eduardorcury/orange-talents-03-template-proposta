@@ -30,6 +30,8 @@ public class Cartao {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cartao", fetch = FetchType.LAZY)
     private List<Biometria> biometrias;
 
+    private Boolean bloqueado = false;
+
     @Deprecated
     public Cartao() {
 
@@ -46,6 +48,14 @@ public class Cartao {
         StringBuilder builder = new StringBuilder(this.idExterno);
         builder.replace(7, 13, "** ***");
         return builder.toString();
+    }
+
+    public Boolean bloqueado() {
+        return this.bloqueado;
+    }
+
+    public void bloquearCartao() {
+        this.bloqueado = true;
     }
 
 }
