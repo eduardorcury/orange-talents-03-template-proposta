@@ -1,6 +1,6 @@
 package com.zup.academy.eduardoribeiro.Proposta.acompanhamento;
 
-import com.zup.academy.eduardoribeiro.Proposta.builder.Builder;
+import com.zup.academy.eduardoribeiro.Proposta.utils.Builder;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.PropostaRepository;
 import org.junit.jupiter.api.Test;
@@ -30,12 +30,12 @@ class AcompanhamentoPropostaControllerTest {
     void deveRetornarPropostaDeIdInformado() throws Exception {
 
         Proposta proposta = Builder.novaProposta().build().toModel();
-        propostaRepository.save(proposta);
+        Proposta propostaSalva = propostaRepository.save(proposta);
 
-        mockMvc.perform(get("/propostas/1"))
+        mockMvc.perform(get("/propostas/" + propostaSalva.getId()))
                 .andExpect(status().isOk());
 
-        mockMvc.perform(get("/propostas/2"))
+        mockMvc.perform(get("/propostas/999"))
                 .andExpect(status().isNotFound());
 
     }

@@ -10,8 +10,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.zup.academy.eduardoribeiro.Proposta.builder.Builder.novaConsultaCartao;
-import static com.zup.academy.eduardoribeiro.Proposta.builder.Builder.novaProposta;
+import static com.zup.academy.eduardoribeiro.Proposta.utils.Builder.novaConsultaCartao;
+import static com.zup.academy.eduardoribeiro.Proposta.utils.Builder.novaProposta;
 import static com.zup.academy.eduardoribeiro.Proposta.criacao.StatusProposta.CARTAO_ATRELADO;
 import static com.zup.academy.eduardoribeiro.Proposta.criacao.StatusProposta.ELEGIVEL;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -44,12 +44,12 @@ class AssociadorDeCartoesTest {
         proposta.setStatus(ELEGIVEL);
         repository.save(proposta);
         ConsultaCartaoResponse response = novaConsultaCartao().build();
-        when(cartaoClient.consultaCartao(1L)).thenReturn(response);
+        when(cartaoClient.consultaCartao(proposta.getId())).thenReturn(response);
 
         associadorDeCartoes.associaCartoes();
 
         assertThat(proposta.getStatus(), is(CARTAO_ATRELADO));
-        assertThat(proposta.getCartao(), is(cartaoRepository.getOne(1L)));
+        assertThat(proposta.getCartao(), is(cartaoRepository.findAll().get(0)));
         assertThat(cartaoRepository.findAll(), hasSize(1));
 
     }

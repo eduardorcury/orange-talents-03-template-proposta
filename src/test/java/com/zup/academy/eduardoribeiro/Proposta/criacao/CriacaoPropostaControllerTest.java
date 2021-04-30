@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Stream;
 
-import static com.zup.academy.eduardoribeiro.Proposta.builder.Builder.novaProposta;
+import static com.zup.academy.eduardoribeiro.Proposta.utils.Builder.novaProposta;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

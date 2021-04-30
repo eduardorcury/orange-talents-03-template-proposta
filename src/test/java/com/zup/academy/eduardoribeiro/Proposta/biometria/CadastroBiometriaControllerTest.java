@@ -5,6 +5,7 @@ import com.zup.academy.eduardoribeiro.Proposta.cartao.Cartao;
 import com.zup.academy.eduardoribeiro.Proposta.cartao.CartaoRepository;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.PropostaRepository;
+import com.zup.academy.eduardoribeiro.Proposta.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -17,8 +18,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.zup.academy.eduardoribeiro.Proposta.builder.Builder.novaConsultaCartao;
-import static com.zup.academy.eduardoribeiro.Proposta.builder.Builder.novaProposta;
+import static com.zup.academy.eduardoribeiro.Proposta.utils.Builder.novaConsultaCartao;
+import static com.zup.academy.eduardoribeiro.Proposta.utils.Builder.novaProposta;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,23 +36,15 @@ class CadastroBiometriaControllerTest {
     MockMvc mockMvc;
 
     @Autowired
-    CartaoRepository cartaoRepository;
-
-    @Autowired
-    PropostaRepository propostaRepository;
-
-    @Autowired
     ObjectMapper mapper;
+
+    @Autowired
+    TestUtils utils;
 
     @Test
     void deveCadastrarBiometriaParaCartaoExistente() throws Exception {
 
-        Proposta proposta = novaProposta().build().toModel();
-        ReflectionTestUtils.setField(proposta, "id", 1L);
-        propostaRepository.save(proposta);
-        Cartao cartao = novaConsultaCartao().build().toModel(proposta);
-        cartaoRepository.save(cartao);
-
+        Cartao cartao = utils.salvaCartao();
         CadastroBiometriaRequest request = new CadastroBiometriaRequest("ZmluZ2VycHJpbnR2YWxpZG8=");
 
         mockMvc.perform(post(url)

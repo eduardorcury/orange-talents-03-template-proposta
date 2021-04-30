@@ -1,4 +1,4 @@
-package com.zup.academy.eduardoribeiro.Proposta.builder;
+package com.zup.academy.eduardoribeiro.Proposta.utils;
 
 import com.zup.academy.eduardoribeiro.Proposta.cartao.ConsultaCartaoResponse;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.NovaPropostaRequest;
@@ -82,6 +82,11 @@ public class Builder {
         private String titular = "Eduardo";
         private LocalDateTime emitidoEm = LocalDateTime.now();
         private String idProposta = "1";
+
+        public ConsultaCartaoBuilder comProposta(Long idProposta) {
+            this.idProposta = idProposta.toString();
+            return this;
+        }
 
         public ConsultaCartaoResponse build() {
             return new ConsultaCartaoResponse(this.id, this.titular,

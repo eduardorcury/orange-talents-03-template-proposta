@@ -26,4 +26,7 @@ public class NovoBloqueioRequest {
         return new Bloqueio(enderecoIp, userAgent, cartao);
     }
 
+    public String getEnderecoIp() {
+        return enderecoIp;
+    }
 }

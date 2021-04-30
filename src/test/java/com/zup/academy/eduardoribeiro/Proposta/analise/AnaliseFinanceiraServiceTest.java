@@ -1,7 +1,7 @@
 package com.zup.academy.eduardoribeiro.Proposta.analise;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.zup.academy.eduardoribeiro.Proposta.builder.Builder;
+import com.zup.academy.eduardoribeiro.Proposta.utils.Builder;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.NovaPropostaRequest;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.Proposta;
 import feign.FeignException;
@@ -50,7 +50,6 @@ class AnaliseFinanceiraServiceTest {
     void setUp() {
         request = Builder.novaProposta().build();
         proposta = request.toModel();
-        ReflectionTestUtils.setField(proposta,"id", 1L);
         pedido = new PedidoAnaliseFinanceira(proposta);
     }
 
@@ -61,7 +60,7 @@ class AnaliseFinanceiraServiceTest {
         RespostaAnaliseFinanceira resposta = new RespostaAnaliseFinanceira(
                 request.getDocumento(),
                 request.getNome(),
-                ResultadoAnalise.SEM_RESTRICAO, 1L);
+                ResultadoAnalise.SEM_RESTRICAO, proposta.getId());
 
         when(client.consulta(pedido)).thenReturn(resposta);
         service.analise(proposta);
@@ -77,7 +76,7 @@ class AnaliseFinanceiraServiceTest {
         RespostaAnaliseFinanceira resposta = new RespostaAnaliseFinanceira(
                 request.getDocumento(),
                 request.getNome(),
-                ResultadoAnalise.COM_RESTRICAO, 1L);
+                ResultadoAnalise.COM_RESTRICAO, proposta.getId());
 
         FeignException.UnprocessableEntity exception =
                 new FeignException.UnprocessableEntity(

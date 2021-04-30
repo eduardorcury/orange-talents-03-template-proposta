@@ -44,6 +44,10 @@ public class Cartao {
         this.proposta = proposta;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String retornaCartaoOfuscado() {
         StringBuilder builder = new StringBuilder(this.idExterno);
         builder.replace(7, 13, "** ***");
