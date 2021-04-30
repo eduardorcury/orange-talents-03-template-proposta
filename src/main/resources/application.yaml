@@ -8,13 +8,6 @@ spring:
           issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18080/auth/realms/PropostaRealm}
           jwk-set-uri: ${KEYCLOAK_JWKS_URI:http://localhost:18080/auth/realms/PropostaRealm/protocol/openid-connect/certs}
 
-#keycloak:
-#  realm: ${KEYCLOAK_REALM:PropostaRealm}
-#  auth-server-url: ${KEYCLOAK_AUTH_SERVER_URL:http://localhost:18080/auth}
-#  resource: ${KEYCLOAK_RESOURCE:propostas}
-#  credentials:
-#    secret: ${KEYCLOAK_SECRET:e2c237be-5ead-4467-9201-c650012326de}
-
 sistemas:
   analise-financeira:
     url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999}
