@@ -15,11 +15,7 @@ public class NotificacaoBloqueio {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NotificacaoBloqueio that = (NotificacaoBloqueio) o;
-        return sistemaResponsavel.equals(that.sistemaResponsavel);
+        return Objects.equals(sistemaResponsavel, that.sistemaResponsavel);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(sistemaResponsavel);
-    }
 }
