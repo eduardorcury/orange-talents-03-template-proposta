@@ -2,6 +2,7 @@ package com.zup.academy.eduardoribeiro.Proposta.acompanhamento;
 
 import com.zup.academy.eduardoribeiro.Proposta.criacao.Proposta;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.PropostaRepository;
+import io.micrometer.core.annotation.Timed;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,8 @@ public class AcompanhamentoPropostaController {
     }
 
     @GetMapping("/propostas/{id:^[0-9]*$}")
+    // TODO não há suporte para placeholders??
+    @Timed(value = "${app.nome}.detalhes")
     public ResponseEntity<ConsultaPropostaResponse> mostraDetalhes(@PathVariable("id") Long propostaId) {
 
         Optional<Proposta> propostaOptional = propostaRepository.findById(propostaId);

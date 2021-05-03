@@ -7,9 +7,35 @@ spring:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18080/auth/realms/PropostaRealm}
           jwk-set-uri: ${KEYCLOAK_JWKS_URI:http://localhost:18080/auth/realms/PropostaRealm/protocol/openid-connect/certs}
+  jpa:
+    properties:
+      "[hibernate.generate_statistics]": true
+
+app:
+  nome: ${NOME_SERVICO:propostas}
 
 sistemas:
   analise-financeira:
     url: ${ANALISE-FINANCEIRA_URL:http://localhost:9999}
   cartoes:
     url: ${CARTOES_URL:http://localhost:8888}
+
+management:
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info,health,prometheus
+    prometheus:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+  metrics:
+    tags:
+      aplicacao: ${NOME_SERVICO:propostas}
+      ambiente: ${AMBIENTE:desenvolvimento}

@@ -29,20 +29,3 @@ logging:
     org:
       springframework:
         security: DEBUG
-
-management:
-  health:
-    livenessstate:
-      enabled: true
-    readinessstate:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: "health"
-    jmx:
-      exposure:
-        include: "health"
-  endpoint:
-    health:
-      show-details: always
