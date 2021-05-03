@@ -1,7 +1,7 @@
 package com.zup.academy.eduardoribeiro.Proposta.compartilhado.metricas;
 
-import com.zup.academy.eduardoribeiro.Proposta.criacao.PropostaRepository;
-import io.micrometer.core.instrument.*;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -10,14 +10,11 @@ public class Metricas {
 
     private final String appNome;
 
-    private PropostaRepository propostaRepository;
     private MeterRegistry meterRegistry;
 
     public Metricas(@Value("${app.nome}") String appNome,
-                    PropostaRepository propostaRepository,
                     MeterRegistry meterRegistry) {
         this.appNome = appNome;
-        this.propostaRepository = propostaRepository;
         this.meterRegistry = meterRegistry;
         criaCounters();
     }
