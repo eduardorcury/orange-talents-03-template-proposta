@@ -7,9 +7,6 @@ spring:
         jwt:
           issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:18080/auth/realms/PropostaRealm}
           jwk-set-uri: ${KEYCLOAK_JWKS_URI:http://localhost:18080/auth/realms/PropostaRealm/protocol/openid-connect/certs}
-  jpa:
-    properties:
-      "[hibernate.generate_statistics]": true
 
 app:
   nome: ${NOME_SERVICO:propostas}

@@ -2,6 +2,7 @@ package com.zup.academy.eduardoribeiro.Proposta.cartao;
 
 import com.zup.academy.eduardoribeiro.Proposta.biometria.Biometria;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.Proposta;
+import com.zup.academy.eduardoribeiro.Proposta.viagem.AvisoViagem;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -29,6 +30,9 @@ public class Cartao {
 
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cartao", fetch = FetchType.LAZY)
     private List<Biometria> biometrias;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "cartao", fetch = FetchType.LAZY)
+    private List<AvisoViagem> avisos;
 
     private Boolean bloqueado = false;
 

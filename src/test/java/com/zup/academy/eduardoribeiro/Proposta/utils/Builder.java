@@ -2,9 +2,12 @@ package com.zup.academy.eduardoribeiro.Proposta.utils;
 
 import com.zup.academy.eduardoribeiro.Proposta.cartao.ConsultaCartaoResponse;
 import com.zup.academy.eduardoribeiro.Proposta.criacao.NovaPropostaRequest;
+import com.zup.academy.eduardoribeiro.Proposta.viagem.NovoAvisoRequest;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Month;
 
 public class Builder {
 
@@ -14,6 +17,10 @@ public class Builder {
 
     public static ConsultaCartaoBuilder novaConsultaCartao() {
         return new ConsultaCartaoBuilder();
+    }
+
+    public static NovoAvisoBuilder novoAviso() {
+        return new NovoAvisoBuilder();
     }
 
     public static class NovaPropostaBuilder {
@@ -94,4 +101,42 @@ public class Builder {
         }
 
     }
+
+    public static class NovoAvisoBuilder {
+
+        private String destino = "Dourados";
+        private String ip = "1.1.1.1";
+        private LocalDate termino = LocalDate.of(LocalDate.now().getYear() + 1, Month.FEBRUARY, 3);
+
+        public NovoAvisoBuilder semDestino() {
+            this.destino = null;
+            return this;
+        }
+
+        public NovoAvisoBuilder semIp() {
+            this.ip = null;
+            return this;
+        }
+
+        public NovoAvisoBuilder ipInvalido() {
+            this.ip = "1";
+            return this;
+        }
+
+        public NovoAvisoBuilder semTermino() {
+            this.termino = null;
+            return this;
+        }
+
+        public NovoAvisoBuilder terminoInvalido() {
+            this.termino = LocalDate.of(LocalDate.now().getYear() -1, Month.FEBRUARY, 3);
+            return this;
+        }
+
+        public NovoAvisoRequest build() {
+            return new NovoAvisoRequest(this.destino, this.termino, this.ip);
+        }
+
+    }
+
 }
