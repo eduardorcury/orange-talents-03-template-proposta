@@ -78,7 +78,7 @@ public class BloqueadorDeCartoes {
             cartao.bloquearCartao();
             cartaoRepository.save(cartao);
         } catch (FeignException exception) {
-            logger.info("Notificação de bloqueio do cartão {} não foi aceita",
+            logger.error("Notificação de bloqueio do cartão {} não foi aceita",
                     cartao.retornaCartaoOfuscado());
             this.estadoInconsistente.increment();
         }

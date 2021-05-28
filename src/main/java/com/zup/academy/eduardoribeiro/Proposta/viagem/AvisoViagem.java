@@ -1,15 +1,10 @@
 package com.zup.academy.eduardoribeiro.Proposta.viagem;
 
 import com.zup.academy.eduardoribeiro.Proposta.cartao.Cartao;
-import com.zup.academy.eduardoribeiro.Proposta.compartilhado.validacao.IpAddress;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GeneratorType;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 

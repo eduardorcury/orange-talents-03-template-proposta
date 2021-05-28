@@ -1,6 +1,7 @@
 package com.zup.academy.eduardoribeiro.Proposta.cartao;
 
 import com.zup.academy.eduardoribeiro.Proposta.bloqueio.NotificacaoBloqueio;
+import com.zup.academy.eduardoribeiro.Proposta.viagem.NotificacaoViagem;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +19,9 @@ public interface CartaoClient {
 
     @RequestMapping(method = POST, value = "/api/cartoes/{id}/bloqueios")
     String notificaBloqueio(@PathVariable("id") String cartaoId, @RequestBody NotificacaoBloqueio notificacao);
+
+    @RequestMapping(method = POST, value = "/api/cartoes/{id}/avisos")
+    String notificaViagem(@PathVariable("id") String cartaoId, @RequestBody NotificacaoViagem notificacao);
 
     @RequestMapping(method = GET, value = "/actuator/health")
     void healthCheck();
