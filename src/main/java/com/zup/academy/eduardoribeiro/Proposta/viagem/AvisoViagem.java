@@ -46,4 +46,8 @@ public class AvisoViagem {
         this.userAgent = userAgent;
         this.cartao = cartao;
     }
+
+    public Cartao getCartao() {
+        return cartao;
+    }
 }
