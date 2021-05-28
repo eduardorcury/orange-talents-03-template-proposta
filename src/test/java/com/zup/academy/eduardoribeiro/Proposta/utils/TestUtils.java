@@ -24,6 +24,8 @@ public class TestUtils {
     }
 
     public Cartao salvaCartao() {
+        propostaRepository.deleteAll();
+        cartaoRepository.deleteAll();
         Proposta proposta = Builder.novaProposta().build().toModel();
         propostaRepository.save(proposta);
         Cartao cartao = Builder.novaConsultaCartao()
