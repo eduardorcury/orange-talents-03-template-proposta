@@ -8,6 +8,7 @@ import feign.Request;
 import feign.RequestTemplate;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -45,6 +46,11 @@ class BloqueadorDeCartoesTest {
     private final String userAgent = "User Agent";
     private final NovoBloqueioRequest request = new NovoBloqueioRequest("1.1.1.1");
     private final NotificacaoBloqueio notificacao = new NotificacaoBloqueio();
+
+    @BeforeEach
+    void setUp() {
+        utils.limpaBanco();
+    }
 
     @Test
     @DisplayName("Deve bloquear cartão quando sistema legado retornar OK")
