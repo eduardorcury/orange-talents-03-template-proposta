@@ -44,9 +44,4 @@ public class TestUtils {
         return cartaoRepository.save(cartao);
     }
 
-    public void limpaBanco() {
-        propostaRepository.deleteAll();
-        cartaoRepository.deleteAll();
-    }
-
 }

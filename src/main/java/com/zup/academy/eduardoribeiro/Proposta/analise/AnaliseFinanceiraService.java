@@ -52,7 +52,7 @@ public class AnaliseFinanceiraService {
                 .counter();
     }
 
-    @Async
+    //@Async
     public void analise(Proposta proposta) throws IOException {
 
         PedidoAnaliseFinanceira pedido = new PedidoAnaliseFinanceira(proposta);

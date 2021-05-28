@@ -47,11 +47,6 @@ class BloqueadorDeCartoesTest {
     private final NovoBloqueioRequest request = new NovoBloqueioRequest("1.1.1.1");
     private final NotificacaoBloqueio notificacao = new NotificacaoBloqueio();
 
-    @BeforeEach
-    void setUp() {
-        utils.limpaBanco();
-    }
-
     @Test
     @DisplayName("Deve bloquear cartão quando sistema legado retornar OK")
     void deveBloquearCartaoENotificarSistemaLegado() {

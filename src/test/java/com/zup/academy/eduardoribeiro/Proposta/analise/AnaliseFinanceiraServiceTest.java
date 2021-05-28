@@ -20,11 +20,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.concurrent.Callable;
 
 import static com.zup.academy.eduardoribeiro.Proposta.criacao.StatusProposta.ELEGIVEL;
 import static com.zup.academy.eduardoribeiro.Proposta.criacao.StatusProposta.NAO_ELEGIVEL;
 import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.when;
 
@@ -55,7 +57,7 @@ class AnaliseFinanceiraServiceTest {
 
     @Test
     @DisplayName("Analisa proposta que retorna consulta sem restrição")
-    void analisaPropostaSemRestricao() throws IOException {
+    void analisaPropostaSemRestricao() throws IOException, InterruptedException {
 
         RespostaAnaliseFinanceira resposta = new RespostaAnaliseFinanceira(
                 request.getDocumento(),
@@ -64,14 +66,14 @@ class AnaliseFinanceiraServiceTest {
 
         when(client.consulta(pedido)).thenReturn(resposta);
         service.analise(proposta);
-        await().until(() -> proposta.getStatus() != null);
+        //await().until(proposta::getStatus, equalTo(ELEGIVEL));
         assertThat(proposta.getStatus(), is(ELEGIVEL));
 
     }
 
     @Test
     @DisplayName("Analisa proposta que retorna consulta com restrição")
-    void analisaPropostaComRestricao() throws IOException {
+    void analisaPropostaComRestricao() throws IOException, InterruptedException {
 
         RespostaAnaliseFinanceira resposta = new RespostaAnaliseFinanceira(
                 request.getDocumento(),
@@ -88,8 +90,10 @@ class AnaliseFinanceiraServiceTest {
 
         when(client.consulta(pedido)).thenThrow(exception);
         service.analise(proposta);
-        await().until(() -> proposta.getStatus() != null);
+        //await().until(proposta::getStatus, equalTo(NAO_ELEGIVEL));
         assertThat(proposta.getStatus(), is(NAO_ELEGIVEL));
+        Thread.sleep(1000);
 
     }
+
 }

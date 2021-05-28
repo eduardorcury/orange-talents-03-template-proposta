@@ -69,7 +69,7 @@ public class BloqueadorDeCartoes {
 
     }
 
-    @Async
+    //@Async
     private void notificaBloqueio(Cartao cartao) {
 
         NotificacaoBloqueio notificacao = new NotificacaoBloqueio();
