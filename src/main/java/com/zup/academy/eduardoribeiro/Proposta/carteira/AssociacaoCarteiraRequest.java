@@ -22,4 +22,7 @@ public class AssociacaoCarteiraRequest {
         return new Carteira(cartao, this.email);
     }
 
+    public String getEmail() {
+        return email;
+    }
 }

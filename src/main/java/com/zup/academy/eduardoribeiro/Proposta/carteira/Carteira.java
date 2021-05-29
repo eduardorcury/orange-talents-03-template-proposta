@@ -28,4 +28,8 @@ public class Carteira {
     public String getId() {
         return id;
     }
+
+    public Cartao getCartao() {
+        return cartao;
+    }
 }

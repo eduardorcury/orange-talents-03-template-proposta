@@ -12,20 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.util.Optional;
 
 @RestController
 public class AssociaCarteiraController {
 
     private final CartaoRepository cartaoRepository;
-    private final CarteiraRepository carteiraRepository;
+    private final AssociadorDeCarteiras associador;
     private final Logger LOGGER = LoggerFactory.getLogger("jsonLogger");
 
     public AssociaCarteiraController(CartaoRepository cartaoRepository,
-                                     CarteiraRepository carteiraRepository) {
+                                     AssociadorDeCarteiras associador) {
         this.cartaoRepository = cartaoRepository;
-        this.carteiraRepository = carteiraRepository;
+        this.associador = associador;
     }
 
     @PostMapping(value = "/cartoes/{id}/carteiras")
@@ -39,20 +38,7 @@ public class AssociaCarteiraController {
             return ResponseEntity.notFound().build();
         }
 
-        Cartao cartao = possivelCartao.get();
-
-        if (carteiraRepository.existsByCartao(cartao)) {
-            LOGGER.error("Tentativa de associar carteira já existente ao cartão de id {}", cartaoId);
-            return ResponseEntity.unprocessableEntity().build();
-        }
-
-        Carteira carteira = request.toModel(cartao);
-        carteiraRepository.save(carteira);
-        URI uri = uriBuilder.path("/cartoes/{cartaoId}/carteiras/{carteiraId}")
-                .buildAndExpand(cartaoId, carteira.getId())
-                .toUri();
-        LOGGER.info("Carteira de id {} associada ao cartão de id {}", carteira.getId(), cartaoId);
-        return ResponseEntity.created(uri).build();
+        return associador.associaCarteira(possivelCartao.get(), request, uriBuilder);
 
     }
 
