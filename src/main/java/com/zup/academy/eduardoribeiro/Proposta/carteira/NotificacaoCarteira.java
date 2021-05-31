@@ -5,10 +5,11 @@ import java.util.Objects;
 public class NotificacaoCarteira {
 
     private String email;
-    private String carteira = "PAYPAL";
+    private String carteira;
 
     public NotificacaoCarteira(AssociacaoCarteiraRequest request) {
         this.email = request.getEmail();
+        this.carteira = request.getTipo();
     }
 
     public String getEmail() {

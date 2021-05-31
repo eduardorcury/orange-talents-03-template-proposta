@@ -14,15 +14,20 @@ public class Carteira {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
-    @OneToOne(optional = false)
+    @ManyToOne(optional = false)
     private Cartao cartao;
 
     @Column(nullable = false)
     private String email;
 
-    public Carteira(Cartao cartao, String email) {
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    private TipoDeCarteira tipo;
+
+    public Carteira(Cartao cartao, String email, TipoDeCarteira tipo) {
         this.cartao = cartao;
         this.email = email;
+        this.tipo = tipo;
     }
 
     public String getId() {

@@ -29,8 +29,10 @@ public class AssociadorDeCarteiras {
                                              AssociacaoCarteiraRequest request,
                                              UriComponentsBuilder uriBuilder) {
 
-        if (carteiraRepository.existsByCartao(cartao)) {
-            LOGGER.error("Tentativa de associar carteira já existente ao cartão de id {}", cartao.getId());
+        if (carteiraRepository.existsByCartaoAndTipo(cartao, TipoDeCarteira.valueOf(request.getTipo()))) {
+            LOGGER.error("Tentativa de associar carteira de tipo {} já existente ao cartão de id {}",
+                    request.getTipo(),
+                    cartao.getId());
             return ResponseEntity.unprocessableEntity().build();
         }
 

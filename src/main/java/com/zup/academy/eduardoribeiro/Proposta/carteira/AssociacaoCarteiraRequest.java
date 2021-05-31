@@ -1,11 +1,10 @@
 package com.zup.academy.eduardoribeiro.Proposta.carteira;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.zup.academy.eduardoribeiro.Proposta.cartao.Cartao;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 public class AssociacaoCarteiraRequest {
 
@@ -13,16 +12,26 @@ public class AssociacaoCarteiraRequest {
     @Email
     private String email;
 
-    @JsonCreator
-    public AssociacaoCarteiraRequest(@NotBlank @Email @JsonProperty("email") String email) {
+    @NotBlank
+    @Pattern(regexp = "PAYPAL|SAMSUNG_PAY",
+            message = "Tipos de carteiras possíveis são PAYPAL ou SAMSUNG_PAY")
+    private String tipo;
+
+    public AssociacaoCarteiraRequest(@NotBlank @Email String email,
+                                     @NotBlank @Pattern(regexp = "PAYPAL|SAMSUNG_PAY") String tipo) {
         this.email = email;
+        this.tipo = tipo;
     }
 
     public Carteira toModel(Cartao cartao) {
-        return new Carteira(cartao, this.email);
+        return new Carteira(cartao, this.email, TipoDeCarteira.valueOf(this.tipo));
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public String getTipo() {
+        return tipo;
     }
 }

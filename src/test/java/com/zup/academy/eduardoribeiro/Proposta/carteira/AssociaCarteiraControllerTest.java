@@ -10,6 +10,8 @@ import feign.RequestTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mockito;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,13 +56,14 @@ class AssociaCarteiraControllerTest {
     @MockBean
     CartaoClient cartaoClient;
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(strings = {"PAYPAL", "SAMSUNG_PAY"})
     @DisplayName("Deve associar uma nova carteira a um cartão existente")
-    void deveAssociarCarteiraACartao() throws Exception {
+    void deveAssociarCarteiraACartao(String tipo) throws Exception {
 
         Cartao cartao = utils.salvaCartao();
 
-        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com");
+        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com", tipo);
 
         mockMvc.perform(post("/cartoes/" + cartao.getId() + "/carteiras")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -73,15 +77,45 @@ class AssociaCarteiraControllerTest {
 
     }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = { "email", "  " })
-    @DisplayName("Deve retornar BAD_REQUEST para request inválido")
-    void naoDeveAssociarCarteiraParaRequestInvalido(String email) throws Exception {
+    @Test
+    @DisplayName("Deve associar duas carteiras diferentes a um cartão")
+    void deveAssociarDuasCarteirasDiferentesACartao() throws Exception {
 
         Cartao cartao = utils.salvaCartao();
 
-        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest(email);
+        AssociacaoCarteiraRequest request1 =
+                new AssociacaoCarteiraRequest("email@gmail.com", "PAYPAL");
+
+        AssociacaoCarteiraRequest request2 =
+                new AssociacaoCarteiraRequest("email@gmail.com", "SAMSUNG_PAY");
+
+        mockMvc.perform(post("/cartoes/" + cartao.getId() + "/carteiras")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request1)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
+
+        mockMvc.perform(post("/cartoes/" + cartao.getId() + "/carteiras")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(request2)))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
+
+        List<Carteira> list = carteiraRepository.findAll();
+        assertEquals(2, list.size());
+        assertEquals(cartao, list.get(0).getCartao());
+        assertEquals(cartao, list.get(1).getCartao());
+
+    }
+
+    @ParameterizedTest
+    @MethodSource("criaRequestInvalidos")
+    @DisplayName("Deve retornar BAD_REQUEST para request inválido")
+    void naoDeveAssociarCarteiraParaRequestInvalido(String email, String tipo) throws Exception {
+
+        Cartao cartao = utils.salvaCartao();
+
+        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest(email, tipo);
 
         mockMvc.perform(post("/cartoes/" + cartao.getId() + "/carteiras")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -96,7 +130,7 @@ class AssociaCarteiraControllerTest {
     @DisplayName("Deve retornar NOT_FOUND para cartão não encontrado")
     void deveRetornarNotFoundParaCartaoNaoEncontrado() throws Exception {
 
-        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com");
+        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com", "PAYPAL");
 
         mockMvc.perform(post("/cartoes/1/carteiras")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -112,11 +146,11 @@ class AssociaCarteiraControllerTest {
     void deveRetornarUnprocessableEntityParaCarteiraJaAssociada() throws Exception {
 
         Cartao cartao = utils.salvaCartao();
-        carteiraRepository.save(new Carteira(cartao, "email@gmail.com"));
+        carteiraRepository.save(new Carteira(cartao, "email@gmail.com", TipoDeCarteira.PAYPAL));
 
         assertEquals(1, carteiraRepository.findAll().size());
 
-        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com");
+        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com", "PAYPAL");
 
         mockMvc.perform(post("/cartoes/" + cartao.getId() + "/carteiras")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -132,7 +166,7 @@ class AssociaCarteiraControllerTest {
     void deveRetornarInternalServerErrorSeSistemaRetornarErro() throws Exception {
 
         Cartao cartao = utils.salvaCartao();
-        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com");
+        AssociacaoCarteiraRequest request = new AssociacaoCarteiraRequest("email@gmail.com", "PAYPAL");
         FeignException.BadRequest exception =
                 new FeignException.BadRequest(
                         "Erro do sistema",
@@ -150,4 +184,15 @@ class AssociaCarteiraControllerTest {
 
         assertTrue(carteiraRepository.findAll().isEmpty());
     }
+
+    private static Stream<Arguments> criaRequestInvalidos() {
+        return Stream.of(
+                Arguments.of(null, "PAYPAL"),
+                Arguments.of("email@gmail.com", null),
+                Arguments.of(" ", " "),
+                Arguments.of("email", "PAYPAL"),
+                Arguments.of("email@gmail.com", "qualquer")
+        );
+    }
+
 }

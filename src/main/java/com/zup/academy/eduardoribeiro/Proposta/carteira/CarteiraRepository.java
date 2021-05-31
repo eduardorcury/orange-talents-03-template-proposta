@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CarteiraRepository extends JpaRepository<Carteira, String> {
 
-    Boolean existsByCartao(Cartao cartao);
+    Boolean existsByCartaoAndTipo(Cartao cartao, TipoDeCarteira tipo);
 
 }
