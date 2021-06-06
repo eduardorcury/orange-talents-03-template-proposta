@@ -4,6 +4,7 @@ import com.zup.academy.eduardoribeiro.Proposta.cartao.Cartao;
 import com.zup.academy.eduardoribeiro.Proposta.cartao.CartaoClient;
 import com.zup.academy.eduardoribeiro.Proposta.cartao.CartaoRepository;
 import feign.FeignException;
+import io.opentracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -18,19 +19,23 @@ public class NotificadorDeViagens {
     private final AvisoViagemRepository avisoRepository;
     private final CartaoRepository cartaoRepository;
     private final CartaoClient client;
+    private final Tracer tracer;
     private final Logger LOGGER = LoggerFactory.getLogger(NotificadorDeViagens.class);
 
     public NotificadorDeViagens(AvisoViagemRepository avisoRepository,
                                 CartaoRepository cartaoRepository,
-                                CartaoClient client) {
+                                CartaoClient client,
+                                Tracer tracer) {
         this.avisoRepository = avisoRepository;
         this.cartaoRepository = cartaoRepository;
         this.client = client;
+        this.tracer = tracer;
     }
 
     public ResponseEntity<?> notifica(Long cartaoId, NovoAvisoRequest request, String userAgent) {
 
         Optional<Cartao> possivelCartao = cartaoRepository.findById(cartaoId);
+        tracer.activeSpan().setTag("cartao.id", cartaoId);
 
         if (possivelCartao.isPresent()) {
             Cartao cartao = possivelCartao.get();

@@ -2,6 +2,7 @@ package com.zup.academy.eduardoribeiro.Proposta.criacao;
 
 import com.zup.academy.eduardoribeiro.Proposta.analise.AnaliseFinanceiraService;
 import com.zup.academy.eduardoribeiro.Proposta.compartilhado.erros.ErroPadronizado;
+import io.opentracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,15 @@ public class CriacaoPropostaController {
 
     private final PropostaRepository propostaRepository;
     private final AnaliseFinanceiraService analiseService;
+    private final Tracer tracer;
     private final Logger logger = LoggerFactory.getLogger("jsonLogger");
 
     public CriacaoPropostaController(PropostaRepository propostaRepository,
-                                     AnaliseFinanceiraService analiseService) {
+                                     AnaliseFinanceiraService analiseService,
+                                     Tracer tracer) {
         this.propostaRepository = propostaRepository;
         this.analiseService = analiseService;
+        this.tracer = tracer;
     }
 
 
@@ -40,6 +44,7 @@ public class CriacaoPropostaController {
         }
 
         Proposta proposta = request.toModel();
+        tracer.activeSpan().setTag("user.email", request.getEmail());
 
         propostaRepository.save(proposta);
         URI uri = uriComponentsBuilder

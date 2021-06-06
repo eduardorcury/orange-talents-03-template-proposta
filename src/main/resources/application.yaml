@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: propostas
   profiles:
     active: dev
   security:
@@ -36,3 +38,16 @@ management:
     tags:
       aplicacao: ${NOME_SERVICO:propostas}
       ambiente: ${AMBIENTE:desenvolvimento}
+
+opentracing:
+  jaeger:
+    # Jaeger - Habilita ou não
+    enabled: ${JAEGER_ENABLED:true}
+    # Jaeger - Nome do serviço
+    service-name: ${spring.application.name}
+    # Jaeger - Endereço para enviar os metadados (trace, span, etc)
+    http-sender:
+      url: ${JAEGER_ENDPOINT:http://localhost:14268/api/traces}
+    # Jaeger - Tipo de amostragem (probabilístico) e sua configuração (1 = 100%)
+    probabilistic-sampler:
+      sampling-rate: ${JAEGER_SAMPLER:1}

@@ -6,11 +6,11 @@ import com.zup.academy.eduardoribeiro.Proposta.cartao.CartaoRepository;
 import feign.FeignException;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.opentracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,18 +32,21 @@ public class BloqueadorDeCartoes {
     private final CartaoRepository cartaoRepository;
     private final CartaoClient cartaoClient;
     private final MeterRegistry meterRegistry;
+    private final Tracer tracer;
     private final Logger logger = LoggerFactory.getLogger("jsonLogger");
 
-    public BloqueadorDeCartoes( @Value("${app.nome}") String appNome,
+    public BloqueadorDeCartoes(@Value("${app.nome}") String appNome,
                                BloqueioRepository bloqueioRepository,
                                CartaoRepository cartaoRepository,
                                CartaoClient cartaoClient,
-                               MeterRegistry meterRegistry) {
+                               MeterRegistry meterRegistry,
+                               Tracer tracer) {
         this.appNome = appNome;
         this.bloqueioRepository = bloqueioRepository;
         this.cartaoRepository = cartaoRepository;
         this.cartaoClient = cartaoClient;
         this.meterRegistry = meterRegistry;
+        this.tracer = tracer;
     }
 
     @PostConstruct
@@ -57,6 +60,8 @@ public class BloqueadorDeCartoes {
     }
 
     public void bloqueiaCartao(Cartao cartao, String userAgent, NovoBloqueioRequest request) {
+
+        tracer.activeSpan().setTag("cartao.id", cartao.getId());
 
         if (cartao.bloqueado()) {
             throw new ResponseStatusException(UNPROCESSABLE_ENTITY);

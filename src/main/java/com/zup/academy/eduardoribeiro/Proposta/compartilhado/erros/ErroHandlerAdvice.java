@@ -19,11 +19,11 @@ public class ErroHandlerAdvice {
         this.messageSource = messageSource;
     }
 
-
     @ExceptionHandler
     public ResponseEntity<ErroPadronizado> trataErroValidacao(MethodArgumentNotValidException exception) {
 
         Set<String> mensagens = exception
+                .getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(erro -> String.format("Campo %s %s",

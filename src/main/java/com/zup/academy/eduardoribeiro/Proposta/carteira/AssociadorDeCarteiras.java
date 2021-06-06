@@ -3,6 +3,7 @@ package com.zup.academy.eduardoribeiro.Proposta.carteira;
 import com.zup.academy.eduardoribeiro.Proposta.cartao.Cartao;
 import com.zup.academy.eduardoribeiro.Proposta.cartao.CartaoClient;
 import feign.FeignException;
+import io.opentracing.Tracer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,17 +18,22 @@ public class AssociadorDeCarteiras {
 
     private final CarteiraRepository carteiraRepository;
     private final CartaoClient cartaoClient;
+    private final Tracer tracer;
     private final Logger LOGGER = LoggerFactory.getLogger("jsonLogger");
 
     public AssociadorDeCarteiras(CarteiraRepository carteiraRepository,
-                                 CartaoClient cartaoClient) {
+                                 CartaoClient cartaoClient,
+                                 Tracer tracer) {
         this.carteiraRepository = carteiraRepository;
         this.cartaoClient = cartaoClient;
+        this.tracer = tracer;
     }
 
     public ResponseEntity<?> associaCarteira(Cartao cartao,
                                              AssociacaoCarteiraRequest request,
                                              UriComponentsBuilder uriBuilder) {
+
+        tracer.activeSpan().setTag("cartao.id", cartao.getId());
 
         if (carteiraRepository.existsByCartaoAndTipo(cartao, TipoDeCarteira.valueOf(request.getTipo()))) {
             LOGGER.error("Tentativa de associar carteira de tipo {} já existente ao cartão de id {}",
